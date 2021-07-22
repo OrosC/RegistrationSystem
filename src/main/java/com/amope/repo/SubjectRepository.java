@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface SubjectRespository extends JpaRepository<Subject,Long> {
+public interface SubjectRepository extends JpaRepository<Subject,Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Subject s SET s.name = ?2, s.author = ?3 WHERE s.id = ?1")
-    int updateSubject(Long id, String name, String author);
+    @Query("UPDATE Subject s SET s.name = ?2, s.teacher = ?3 WHERE s.id = ?1")
+    int updateSubject(Long id, String name, String teacher);
 }

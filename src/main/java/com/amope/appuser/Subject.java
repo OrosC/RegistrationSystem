@@ -1,5 +1,6 @@
 package com.amope.appuser;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,35 +11,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import com.amope.repo.DbObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
-public class Subject {
-    @SequenceGenerator(
-            name = "subject_sequence",
-            sequenceName = "subject_sequence",
-            allocationSize = 1
-    )
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "subject_sequence"
-    )
-    private Long id;
+public class Subject extends DbObject {
+
     private String name;
-    private String author;
-    private String publisher;
+    private String teacher;
 
     @OneToMany
     @JoinColumn(name = "subject_id")
     private List<AppUser> appUser;
 
-    public Subject(String name, String author, String publisher) {
+    public Subject(String name, String teacher) {
         this.name = name;
-        this.author = author;
-        this.publisher = publisher;
+        this.teacher = teacher;
+        this.setCreated(LocalDateTime.now());
     }
 }

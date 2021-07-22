@@ -9,14 +9,17 @@ spring:
     username: oros
     name: regSystem
 
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        auto-index-creation: true
     show-sql: true
+
   mail:
     host: localhost
     port: 1025

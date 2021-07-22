@@ -1,5 +1,7 @@
 package com.amope.appuser;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,16 +19,6 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Address extends DbObject {
 
-    @SequenceGenerator(
-            name = "address_sequence",
-            sequenceName = "address_sequence",
-            allocationSize = 1
-    )
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "address_sequence"
-    )
     private String country;
     private String postCode;
     private String city;
@@ -35,6 +27,7 @@ public class Address extends DbObject {
         this.country = country;
         this.postCode = postCode;
         this.city = city;
+        this.setCreated(LocalDateTime.now());
     }
 
 

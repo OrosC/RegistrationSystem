@@ -1,6 +1,8 @@
 package com.amope;
 
 
+import java.util.Optional;
+
 import com.amope.appuser.AppUser;
 import com.amope.appuser.AppUserRole;
 import com.amope.appuser.AppUserService;
@@ -16,19 +18,21 @@ public class App {
         SpringApplication.run(App.class, args);
     }
 
-    @Bean
-    CommandLineRunner runner(AppUserService service) {
-        return args -> {
-            Address address = new Address("Nigeria", "Ota", "1101AC");
-            AppUser appUser = new AppUser("Dami",
-                    "Ifenla",
-                    "rofelis@yahoo.com",
-                    "password",
-                    AppUserRole.USER,
-                    "f",
-                    address);
-
-            service.signUpUser(appUser);
-        };
-    }
+//    @Bean
+//    CommandLineRunner runner(AppUserService service) {
+//        return args -> {
+//            Address address = new Address("Nigeria", "Ota", "1101AC");
+//            String email = "tolu@yahoo.com";
+//            AppUser appUser = new AppUser("Tolu",
+//                    "Oluomo",
+//                    email,
+//                    "password",
+//                    null,
+//                    AppUserRole.USER,
+//                    "f",
+//                    address);
+//
+//            service.checkEmailIsDuplicate(email, appUser);
+//        };
+//    }
 }
