@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
@@ -23,8 +24,7 @@ public class Subject extends DbObject {
     private String name;
     private String teacher;
 
-    @OneToMany
-    @JoinColumn(name = "subject_id")
+    @ManyToMany(mappedBy = "favoriteSubjects")
     private List<AppUser> appUser;
 
     public Subject(String name, String teacher) {

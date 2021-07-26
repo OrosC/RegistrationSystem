@@ -1,19 +1,16 @@
 package com.amope.appuser;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.amope.App;
-import com.amope.repo.AppRepository;
 import com.amope.registration.token.ConfirmationToken;
 import com.amope.registration.token.ConfirmationTokenService;
+import com.amope.repo.AppRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @Service
 @Data
@@ -58,7 +56,11 @@ public class AppUserService implements UserDetailsService {
         }
 
         if (appUser.hasAddress()) {
-            addressRepository.save(appUser.getAddress());
+            addressRepository.saveAll(appUser.getAddress());
+        }
+
+        if (appUser.hasUploadDp()) {
+
         }
 
         appUserRepository.save(appUser);
@@ -85,15 +87,17 @@ public class AppUserService implements UserDetailsService {
 
     public void checkEmailIsDuplicate(String email, AppUser user) {
         appUserRepository.findByEmail(email).ifPresentOrElse(s -> {
-            System.out.println(s +" already exists" );
-        }, () -> {
-            System.out.println("Signing up new students" + user);
-            signUpUser(user);
-        });
+                    System.out.println(s + " already exists");
+                }, () -> {
+                    System.out.println("Signing up new students" + user);
+                    signUpUser(user);
+                }
+        );
     };
 
     public List<AppUser> getAllUsers() {
-        return appUserRepository.findAll();
+        List<AppUser> users = appUserRepository.findAll();
+        return users;
     }
 
     public AppUser findAppUserById(Long id) {
@@ -102,27 +106,18 @@ public class AppUserService implements UserDetailsService {
     }
 
     @Transactional
-    public AppUser updateUser(Long id, AppUserRequest request) {
+    public AppUser updateUser(Long id, AppUser request) {
         AppUser user = findAppUserById(id);
 
-        if (request.firstName() != null && request.firstName().length() > 0 && !Objects.equals(user.getFirstName(), request.firstName())) {
-            user.setFirstName(request.firstName());
-        }
 
-        if (request.lastName() != null && request.lastName().length() > 0 && !Objects.equals(user.getLastName(), request.lastName())) {
-            user.setLastName(request.lastName());
-        }
-
-        if (request.email() != null && request.email().length() > 0 && !Objects.equals(user.getEmail(), request.email())) {
-            if (appUserRepository.findByEmail(user.getEmail()).isPresent()) {
-                throw new IllegalStateException(user.getEmail() +" already exists");
+        if (request.getEmail() != null && request.getEmail().length() > 0 && !Objects.equals(user.getEmail(), request.getEmail())) {
+            if (appUserRepository.findByEmail(request.getEmail()).isPresent()) {
+                throw new IllegalStateException(request.getEmail() +" already exists");
             }
-            user.setEmail(request.email());
+            user.setEmail(request.getEmail());
         }
 
-        if (request.imageUrl() != null && request.imageUrl().length() > 0 && !Objects.equals(user.getImageUrl(), request.imageUrl())) {
-            user.setImageUrl(request.imageUrl());
-        }
+        BeanUtils.copyProperties(user, request, "id");
 
         return appUserRepository.save(user);
     }

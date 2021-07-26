@@ -4,5 +4,6 @@ public record AppUserRequest (String firstName,
                               String lastName,
                               String email,
                               String password,
-                              String imageUrl) {
+                              String imageUrl,
+                              Address address) {
 }

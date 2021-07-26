@@ -1,12 +1,14 @@
 package com.amope.appuser;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
@@ -31,8 +33,7 @@ public class Address extends DbObject {
     }
 
 
-    @ManyToOne
-    @JoinColumn(name = "app_user_id")
-    private AppUser appUsers;
+    @ManyToMany(mappedBy = "address")
+    private List<AppUser> appUsers;
 
 }

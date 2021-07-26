@@ -1,6 +1,11 @@
 package com.amope.registration;
 
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.time.LocalDateTime;
+
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLWriter;
 
 import com.amope.appuser.AppUser;
 import com.amope.appuser.AppUserRole;
@@ -9,7 +14,10 @@ import com.amope.appuser.Gender;
 import com.amope.email.EmailSender;
 import com.amope.registration.token.ConfirmationToken;
 import com.amope.registration.token.ConfirmationTokenService;
+import com.amope.registration.token.TokenResponse;
+import com.sun.xml.bind.marshaller.XMLWriter;
 import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +30,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
-    public String register(RegistrationRequest request) {
+    public TokenResponse register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.email());
 
         if (!isValidEmail) {
@@ -40,9 +48,10 @@ public class RegistrationService {
 
         String confirmationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
 
-        emailSender.send(request.email(), buildEmail(request.lastName(), confirmationLink));
+        String emailToBeSent = buildEmail(request.lastName(), confirmationLink);
+        emailSender.send(request.email(), emailToBeSent);
 
-        return token;
+        return new TokenResponse(token, emailToBeSent);
     }
 
     @Transactional
@@ -68,6 +77,11 @@ public class RegistrationService {
     }
 
     private String buildEmail(String name, String link) {
+//        HTMLWriter htmlWriter = new HTMLWriter(new Writer(), new HTMLDocument());
+//        Document doc = Jsoup.parse("<html></html>");
+//        doc.body().addClass("body-styles-cls");
+//        doc.body().appendElement("div");
+
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +

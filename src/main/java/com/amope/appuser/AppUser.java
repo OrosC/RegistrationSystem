@@ -10,18 +10,20 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
+
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.amope.repo.DbObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 public class AppUser extends DbObject implements UserDetails {
 
+    private final static String EMPTY_PROFILE_ICON = "https://cardingplug.com/wp-content/uploads/2020/09/cashoutempire-user-1-400x400.png";
     private String firstName;
     private String lastName;
     private String email;
@@ -43,13 +46,23 @@ public class AppUser extends DbObject implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
-    @OneToMany
-    @JoinColumn(name = "app_user_id")
+    @ManyToMany
+    @JoinTable(name = "user_subject",
+            joinColumns = @JoinColumn(name="app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id"))
     private List<Subject> favoriteSubjects;
+
     private BigDecimal totalSpentInBooks;
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+
+    @ManyToMany
+    @JoinTable(name = "user_address",
+            joinColumns = @JoinColumn(name="app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    private List<Address> address;
+
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    private byte[] user_photo;
 
     public AppUser(String firstName, String lastName, String email, String password,
                    String imageUrl, AppUserRole appUserRole, String gender, Address address) {
@@ -57,10 +70,10 @@ public class AppUser extends DbObject implements UserDetails {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl != null? imageUrl: EMPTY_PROFILE_ICON;
         this.appUserRole = appUserRole;
         this.gender = "Female".equalsIgnoreCase(gender) ? Gender.FEMALE: "Male".equalsIgnoreCase(gender) ? Gender.MALE : null;
-        this.address = address;
+        this.address = new ArrayList<>();
         this.setCreated(LocalDateTime.now());
         favoriteSubjects = new ArrayList<>();
     }
@@ -107,5 +120,9 @@ public class AppUser extends DbObject implements UserDetails {
 
     public boolean hasFavs() {
         return favoriteSubjects.size()>0;
+    }
+
+    public boolean hasUploadDp() {
+        return imageUrl != null;
     }
 }

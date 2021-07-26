@@ -1,2 +1,57 @@
-version: "3.9"
+version: '3.8'
 services:
+  reg-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - microservice
+    ports:
+      - 8000:8000
+    volumes:
+      - ./main:/main/app
+    depends_on:
+      - db
+    labels:
+      com.docker.devenvironments.compose: "true"
+      com.docker.devenvironments.compose.build: "true"
+      com.docker.devenvironments.name: reg-service
+  db:
+    image: postgres:11
+    restart: always
+    environment:
+      MYSQL_DATABASE: regsystem
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: oros
+    ports:
+      - 41000:5432
+    - volumes:
+        - '/var/lib/postgres'
+    labels:
+      com.docker.devenvironments.compose: "true"
+      com.docker.devenvironments.name: postgresDB
+    networks:
+      - microservice
+  react-UI:
+    build:
+      context: src/main/frontend
+      dockerfile: Dockerfile
+      environment:
+        - CHOKIDAR_USEPOLLING=true
+      networks:
+        - microservice
+      ports:
+        - 8002:3000
+      volumes:
+        - ./react-ui2:/react/app
+        - '/react/app/node_modules'
+volumes:
+  dbdata:
+    name: microservice_dbdata
+
+networks:
+  default:
+    name: microservice
+    driver: bridge
+
+

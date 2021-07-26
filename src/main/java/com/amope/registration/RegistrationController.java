@@ -1,6 +1,8 @@
 package com.amope.registration;
 
+import com.amope.registration.token.TokenResponse;
 import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +18,7 @@ public class RegistrationController {
     private RegistrationService registrationService;
 
     @PostMapping
-    public String register(@RequestBody RegistrationRequest request) {
+    public TokenResponse register(@RequestBody RegistrationRequest request) {
         return registrationService.register(request);
     }
 
