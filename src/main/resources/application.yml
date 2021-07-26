@@ -5,13 +5,13 @@ server:
 spring:
   datasource:
     password: postgres
-    url: jdbc:postgresql://localhost:41000/regsystem
+    url: jdbc:postgresql://172.17.0.1:41000/regsystem
     username: oros
-    name: regSystem
+    name: regsystem
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

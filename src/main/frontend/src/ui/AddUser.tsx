@@ -1,5 +1,5 @@
-import React, {SyntheticEvent, useEffect, useState} from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import React, {SyntheticEvent, useState} from 'react';
+import {Redirect} from 'react-router-dom';
 import Wrapper from "./Wrapper";
 import {Address} from "../interfaces/address";
 
@@ -20,7 +20,7 @@ const AddUser = () => {
     const submit = async (e:SyntheticEvent) => {
           e.preventDefault();
 
-        const response = await fetch('http://localhost:8080/api/v1/registration', {
+        const response = await fetch('http://172.17.0.1:8080/api/v1/registration', {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
               mode: 'no-cors',

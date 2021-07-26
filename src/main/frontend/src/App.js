@@ -23,7 +23,7 @@ function App() {
             <Route path='/' exact component={Main}></Route>
             <Route path='/users' exact component={Users}></Route>
             <Route path='/user/confirm' exact component={ConfirmUser}></Route>
-            <Route path='/add-user' component={AddUser}></Route>
+            <Route path='/register' component={AddUser}></Route>
             <Route path='/user/:id/edit' component={UsersEdit}></Route>
           </BrowserRouter>
         </section>

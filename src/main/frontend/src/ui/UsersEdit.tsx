@@ -1,6 +1,5 @@
-import React, {PropsWithRef, SyntheticEvent, useEffect, useState} from 'react';
-import { Redirect } from 'react-router-dom';
-import { Product } from '../interfaces/product';
+import React, {PropsWithRef, useEffect, useState} from 'react';
+import {Redirect} from 'react-router-dom';
 import Wrapper from "./Wrapper";
 
 
@@ -13,7 +12,7 @@ const UsersEdit = (props: PropsWithRef<any>) => {
     useEffect(() => {
         (
             async () => {
-                const response = await fetch(`http://localhost:8000/api/v1/users/${props.match.params.id}`);
+                const response = await fetch(`http://172.17.0.1:8000/api/v1/users/${props.match.params.id}`);
 
                 const product = await response.json();
                 setTitle(product.title)
@@ -26,7 +25,7 @@ const UsersEdit = (props: PropsWithRef<any>) => {
 
     const submit = async () => {
 
-          await fetch(`http://localhost:8080/api/v1/users/${props.match.params.id}`, {
+          await fetch(`http://172.17.0.1:8080/api/v1/users/${props.match.params.id}`, {
               method: 'PUT',
               headers: {'Content-Type': 'application/json'},
               body:JSON.stringify({

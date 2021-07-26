@@ -7,7 +7,7 @@ const Main = () => {
     useEffect(() => {
         (
             async () => {
-                const response = await fetch(`http://localhost:8000/api/products`);
+                const response = await fetch(`http://172.17.0.1:8000/api/products`);
 
                 const data = await response.json();
                 setProducts(data);

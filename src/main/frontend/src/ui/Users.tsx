@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import Wrapper from "./Wrapper";
 import {User} from "../interfaces/user";
-import axios from "axios";
 
 const Users = () => {
     const [users, setUsers] = useState([] as User[]);
@@ -11,11 +10,7 @@ const Users = () => {
     useEffect(() => {
         (
             async () => {
-                const response = await fetch('http://localhost:8080/api/v1/users', 
-                // {
-                //     method: 'GET',
-                //     mode: 'no-cors',}
-                )
+                const response = await fetch('http://172.17.0.1:8080/api/v1/users');
 
                 const data = await response.json();
 
